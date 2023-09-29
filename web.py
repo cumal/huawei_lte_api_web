@@ -64,4 +64,4 @@ with ui.column().classes('fixed-center').style('align-items: center;'):
         ui.button('Get info', on_click=lambda: [get_info()])
         ui.button('Reboot', on_click=lambda: [reboot_router()])
 
-ui.run(port=2233, title="RouterConfig", dark=None)
+ui.run(port=2233, title="RouterConfig", dark=None, reload=False)
