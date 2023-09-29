@@ -62,7 +62,7 @@ def reboot_router():
 with ui.column().classes('fixed-center').style('align-items: center;'):
     with ui.card().style('align-items: center;'):
         ui.label("Router configuration")
-        ui.link('router', 'https://' + router_ip + "/")
+        ui.link('Router website', 'https://' + router_ip + "/", new_tab=True).style('color: inherit;')
         ui.button('Update DNS', on_click=lambda: [update_dns()])
         ui.button('Restore DNS', on_click=lambda: [restore_dns()])
         ui.button('Get info', on_click=lambda: [get_info()])
