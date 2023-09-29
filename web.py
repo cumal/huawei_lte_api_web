@@ -27,6 +27,7 @@ def update_dns():
         dnsstatus=False
         was = client.dhcp.set_settings(dhcp_ip_address=router_ip, dhcp_lan_netmask="255.255.255.0", dhcp_status=True, dhcp_start_ip_range=100, dhcp_end_ip_range=200, dhcp_lease_time=86400, dns_status=dnsstatus, primary_dns=ip1, secondary_dns=ip2, show_dns_setting=True)
         ui.notify(str(was))
+    session.close()
 
 def restore_dns():
     session = create_session()
@@ -37,6 +38,7 @@ def restore_dns():
         dnsstatus=True
         was = client.dhcp.set_settings(dhcp_ip_address=router_ip, dhcp_lan_netmask="255.255.255.0", dhcp_status=True, dhcp_start_ip_range=100, dhcp_end_ip_range=200, dhcp_lease_time=86400, dns_status=dnsstatus, primary_dns=ip1, secondary_dns=ip2, show_dns_setting=True)
         ui.notify(str(was))
+    session.close()
 
 def get_info():
     session = create_session()
@@ -45,6 +47,7 @@ def get_info():
         ui.notify(str(client.device.signal()))  # Can be accessed without authorization
         ui.notify(str(client.device.information()))  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
         ui.notify(str(client.dhcp.settings()))
+    session.close()
 
 def reboot_router():
     session = create_session()
@@ -54,6 +57,7 @@ def reboot_router():
             ui.notify('Reboot requested successfully')
         else:
             ui.notify('Error requesting reboot')
+    session.close()
 
 with ui.column().classes('fixed-center').style('align-items: center;'):
     with ui.card().style('align-items: center;'):
