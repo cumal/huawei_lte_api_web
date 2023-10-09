@@ -1,7 +1,6 @@
 from nicegui import ui
 from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
-from huawei_lte_api.enums.client import ResponseEnum
 import requests
 import urllib3
 import os

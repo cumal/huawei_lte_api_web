@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3.10-alpine
 
 LABEL org.opencontainers.image.source=https://github.com/cumal/huawei_lte_api_web
 
