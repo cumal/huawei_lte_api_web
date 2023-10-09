@@ -40,18 +40,16 @@ def restore_dns():
         ui.notify(str(was))
     session.close()
 
-def fix_val(value, regex, max, offset, invert):
+def fix_val(value, regex, best, worst):
     rex = re.search(regex, value)
-    if invert:
-        fixed_val = (max - float(rex.group(1)) + offset)/max
-    else:
-        fixed_val = float(rex.group(1))/max
-    return fixed_val
+    val = float(rex.group(1))
+    percent = (worst - val) / (worst - best)
+    return round(percent, 2)
 
-def get_color(val):
-    if (val*100 > 50):
+def get_color(percent):
+    if (percent > 0.7):
         color = "green"
-    elif (val*100 > 25):
+    elif (percent > 0.4):
         color = "yellow"
     else:
         color = "red"
@@ -67,14 +65,14 @@ def get_info():
         ui.notify(str(client.dhcp.settings()))
     session.close()
 
-    val = fix_val(signal["rsrq"], "-(\d+\.\d+)dB", 20, 0, True)
+    val = fix_val(signal["rsrq"], "-(\d+\.\d+)dB", 5, 18)
     color = get_color(val)
     i.style('color: ' + color)
     i.props('color=' + color)
     i.set_value(val)
     i.tooltip(str(signal["rsrq"]))
 
-    val = fix_val(signal["rsrp"], "-(\d+)dBm", 100, 60, True)
+    val = fix_val(signal["rsrp"], "-(\d+)dBm", 95, 65)
     color = get_color(val)
     j.style('color: ' + color)
     j.props('color=' + color)
