@@ -1,6 +1,7 @@
 from nicegui import ui
 from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
+from huawei_lte_api.enums.client import ResponseEnum
 import requests
 import urllib3
 import os
@@ -43,13 +44,31 @@ def restore_dns():
 def fix_val(value, regex, best, worst):
     rex = re.search(regex, value)
     val = float(rex.group(1))
-    percent = (worst - val) / (worst - best)
-    return round(percent, 2)
+    #percent = (worst - val) / (worst - best)
+    return round(val, 2)
 
 def get_color(percent):
     if (percent > 0.7):
         color = "green"
     elif (percent > 0.4):
+        color = "yellow"
+    else:
+        color = "red"
+    return color
+
+def get_color_rsrp(val):
+    if (val < 90):
+        color = "green"
+    elif (val < 105):
+        color = "yellow"
+    else:
+        color = "red"
+    return color
+
+def get_color_rsrq(val):
+    if (val < 9):
+        color = "green"
+    elif (val < 12):
         color = "yellow"
     else:
         color = "red"
@@ -66,18 +85,16 @@ def get_info():
     session.close()
 
     val = fix_val(signal["rsrq"], "-(\d+\.\d+)dB", 5, 18)
-    color = get_color(val)
+    color = get_color_rsrq(val)
     i.style('color: ' + color)
     i.props('color=' + color)
-    i.set_value(val)
-    i.tooltip(str(signal["rsrq"]))
+    i.set_text(signal["rsrq"])
 
     val = fix_val(signal["rsrp"], "-(\d+)dBm", 95, 65)
-    color = get_color(val)
+    color = get_color_rsrp(val)
     j.style('color: ' + color)
     j.props('color=' + color)
-    j.set_value(val)
-    j.tooltip(str(signal["rsrp"]))
+    j.set_text(signal["rsrp"])
 
 def reboot_router():
     session = create_session()
@@ -97,11 +114,11 @@ with ui.column().classes('fixed-center').style('align-items: center;'):
         ui.button('Restore DNS', on_click=lambda: [restore_dns()])
         ui.button('Get info', on_click=lambda: [get_info()])
         ui.button('Reboot', on_click=lambda: [reboot_router()])
-        with ui.row().style('align-items: center;'):
+        with ui.row():
             ui.label("RSRQ")
             ui.label("RSRP")
-        with ui.row().style('align-items: center;'):
-            i = ui.circular_progress()
-            j = ui.circular_progress()
+        with ui.row():
+            i = ui.label("0")
+            j = ui.label("0")
 
 ui.run(port=2233, title="RouterConfig", dark=None, reload=False)
