@@ -27,7 +27,8 @@ def update_dns():
         ip2 = ""
         dnsstatus=False
         was = client.dhcp.set_settings(dhcp_ip_address=router_ip, dhcp_lan_netmask="255.255.255.0", dhcp_status=True, dhcp_start_ip_range=100, dhcp_end_ip_range=200, dhcp_lease_time=86400, dns_status=dnsstatus, primary_dns=ip1, secondary_dns=ip2, show_dns_setting=True)
-        ui.notify(str(was))
+        # ui.notify(str(was))
+        ui.notify(str(client.dhcp.settings()))
     session.close()
 
 def restore_dns():
@@ -38,7 +39,8 @@ def restore_dns():
         ip2="8.8.4.4"
         dnsstatus=True
         was = client.dhcp.set_settings(dhcp_ip_address=router_ip, dhcp_lan_netmask="255.255.255.0", dhcp_status=True, dhcp_start_ip_range=100, dhcp_end_ip_range=200, dhcp_lease_time=86400, dns_status=dnsstatus, primary_dns=ip1, secondary_dns=ip2, show_dns_setting=True)
-        ui.notify(str(was))
+        # ui.notify(str(was))
+        ui.notify(str(client.dhcp.settings()))
     session.close()
 
 def fix_val(value, regex, best, worst):
@@ -80,8 +82,8 @@ def get_info():
         client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
         signal = client.device.signal()
         ui.notify(str(signal))  # Can be accessed without authorization
-        ui.notify(str(client.device.information()))  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
-        ui.notify(str(client.dhcp.settings()))
+        # ui.notify(str(client.device.information()))  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
+        # ui.notify(str(client.dhcp.settings()))
     session.close()
 
     val = fix_val(signal["rsrq"], "-(\d+\.\d+)dB", 5, 18)
@@ -121,4 +123,4 @@ with ui.column().classes('fixed-center').style('align-items: center;'):
             i = ui.label("0")
             j = ui.label("0")
 
-ui.run(port=2233, title="RouterConfig", dark=None, reload=False)
+ui.run(port=2233, title="RouterConfig", dark=None, reload=False, show=False, binding_refresh_interval=1, tailwind=False)
